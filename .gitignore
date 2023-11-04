@@ -1,5 +1,7 @@
 # Data folder
 data/calibration_imgs
+local/*
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
