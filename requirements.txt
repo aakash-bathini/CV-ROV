@@ -1,3 +1,5 @@
 numpy==1.26.1
 opencv-python==4.8.1.78
 transformers==4.34.0
+torch==2.0.1
+matplotlib==3.7.2
