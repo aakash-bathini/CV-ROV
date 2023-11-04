@@ -17,7 +17,7 @@ objpoints = []  # 3D points in real world space
 imgpoints = []  # 2D points in image plane
 
 # Create a list of calibration images
-image_files = glob.glob('data\\dual\\cal\\*.jpeg')  # Change to your image directory
+image_files = glob.glob('data\\calibration_imgs\\original\\*.jpeg')  # Change to your image directory
 
 # Loop through each image and find chessboard corners
 for image_file in image_files:
@@ -40,14 +40,16 @@ calibration_data = {
     'camera_matrix': mtx,
     'distortion_coefficients': dist,
 }
-np.save('calibration_data.npy', calibration_data)
+np.save('calibration\\calibration_data.npy', calibration_data)
 
+
+os.makedirs("data\\calibration_imgs\\calibrated", exist_ok=True)
 # Undistort images
 for image_file in image_files:
     img = cv2.imread(image_file)
     undistorted_img = cv2.undistort(img, mtx, dist)
     # Save undistorted image
-    undistorted_filename = 'data\\dual_cal\\undistorted_' + os.path.basename(image_file).split('\\')[-1]
+    undistorted_filename = 'data\\calibration_imgs\\calibrated\\calibrated_' + os.path.basename(image_file).split('\\')[-1]
     cv2.imwrite(undistorted_filename, undistorted_img)
 
     # Show an example of the undistorted image (optional)

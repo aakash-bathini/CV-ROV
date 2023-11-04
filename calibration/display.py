@@ -3,11 +3,11 @@ import os
 import glob
 
 # Load the two images
-image1_files = glob.glob('data\\dual\\cal\\*.jpeg')  # Change to your image directory
+image1_files = glob.glob('data\\calibration_imgs\\original\\*.jpeg')  # Change to your image directory
 
 for distorted_file in image1_files:
     filename = os.path.basename(distorted_file).split('\\')[-1]
-    undistorted_file = "data\\dual_cal\\undistorted_"+filename
+    undistorted_file = "data\\calibration_imgs\\calibrated\\calibrated_"+filename
     print(distorted_file, undistorted_file)
 
     image1 = cv2.imread(distorted_file)
