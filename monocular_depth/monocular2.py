@@ -3,6 +3,8 @@ import torch
 import urllib.request
 
 import matplotlib.pyplot as plt
+import numpy as np
+import math
 
 model_type = "DPT_Hybrid"
 
@@ -20,15 +22,28 @@ else:
     transform = midas_transforms.small_transform
 
 cap = cv2.VideoCapture(0)
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('output.avi', fourcc, 20.0, (1920,  1080))
+# cap = cv2.VideoCapture('monocular_depth/driving test 11_11.mov')
+# fourcc = cv2.VideoWriter_fourcc(*'XVID')
+# out = cv2.VideoWriter('output.avi', fourcc, 20.0, (1920,  1080))
 
-while(cap.isOpened()): 
-    ret, frame = cap.read()  
-    
+def mouseValue(event,x,y,flags,param):
+    if event == cv2.EVENT_LBUTTONDOWN: #checks mouse left button down condition
+        value = output[y,x]
+        print("value: ", value)
+        print("inches: ", 136 * math.exp(-1.35E-03 * value))
+        # y = -0.0107*x + 30.2
+        # 136 e^-1.35E-03x
+        
+cv2.namedWindow('output')
+cv2.setMouseCallback('output',mouseValue)
+
+
+# for i  in range(6, 31):
+    # ret = True
+    # frame = cv2.imread('data/distances/' + str(i) + '.JPG')
+while cap.isOpened():
+    ret, frame = cap.read()
     if ret:
-        print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         input_batch = transform(frame).to(device)
         
@@ -47,13 +62,10 @@ while(cap.isOpened()):
         cv2.imshow("output", output/2048)
         cv2.imshow("frame", frame)
         
-        out.write(frame)
-        
-    if cv2.waitKey(1) & 0xFF == ord('q'): 
-        break
+        cv2.waitKey()
     
 cap.release()
-out.release
+# out.release()
   
 # De-allocate any associated memory usage  
 cv2.destroyAllWindows() 
