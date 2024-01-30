@@ -1,6 +1,7 @@
 import cv2
 import torch
 import urllib.request
+from numpy import savetxt
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,7 +22,7 @@ if model_type == "DPT_Large" or model_type == "DPT_Hybrid":
 else:
     transform = midas_transforms.small_transform
 
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 # cap = cv2.VideoCapture('monocular_depth/driving test 11_11.mov')
 # fourcc = cv2.VideoWriter_fourcc(*'XVID')
 # out = cv2.VideoWriter('output.avi', fourcc, 20.0, (1920,  1080))
@@ -38,11 +39,11 @@ cv2.namedWindow('output')
 cv2.setMouseCallback('output',mouseValue)
 
 
-# for i  in range(6, 31):
-    # ret = True
-    # frame = cv2.imread('data/distances/' + str(i) + '.JPG')
-while cap.isOpened():
-    ret, frame = cap.read()
+for i  in range(1, 10):
+    ret = True
+    frame = cv2.imread('data/validation/val' + str(i) + '.jpg')
+# while cap.isOpened():
+#     ret, frame = cap.read()
     if ret:
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         input_batch = transform(frame).to(device)
@@ -58,13 +59,15 @@ while cap.isOpened():
             ).squeeze()
             
         output = prediction.cpu().numpy()
-            
+        cv2.imshow("frame", frame)    
         cv2.imshow("output", output/2048)
-        cv2.imshow("frame", frame)
+        
+        savetxt('data.csv', output, delimiter=',')
+        
         
         cv2.waitKey()
     
-cap.release()
+# cap.release()
 # out.release()
   
 # De-allocate any associated memory usage  
