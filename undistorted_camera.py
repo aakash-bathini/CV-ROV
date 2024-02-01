@@ -42,7 +42,13 @@ while cap.isOpened():
     if cv2.waitKey(1) & 0xFF == ord('q'): 
         break
 
-cv2.imwrite("image3.jpeg", image)
+
+count = 0
+
+while os.path.isfile("image" + str(count) + ".jpg"):
+    count += 1
+
+cv2.imwrite("image" + str(count) + ".jpg", image)
 
 cap.release()
 cv2.destroyAllWindows()
