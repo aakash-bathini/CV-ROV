@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 # Import the image
 cap = cv2.VideoCapture(0)
@@ -30,6 +31,8 @@ def undistort(img):
 
 while cap.isOpened():
     ret, frame = cap.read()
+    
+    print("halsjf")
     
     if ret:
         frame = undistort(frame)

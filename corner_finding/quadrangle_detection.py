@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 
 def undistort(img):
     ret = 2.2063746245104525
@@ -27,22 +27,24 @@ def undistort(img):
     
     return dst
 
-while cap.isOpened():
-    ret, frame = cap.read()
+# while cap.isOpened():
+#     ret, frame = cap.read()
     
-    if ret:
-        frame = undistort(frame)
-        if cv2.waitKey(1) & 0xFF == ord('s'): 
-            image = frame
-            break
+#     if ret:
+#         frame = undistort(frame)
+#         if cv2.waitKey(1) & 0xFF == ord('s'): 
+#             image = frame
+#             break
             
-        cv2.imshow("Capture", frame)
+#         cv2.imshow("Capture", frame)
         
-    if cv2.waitKey(1) & 0xFF == ord('q'): 
-        break
+#     if cv2.waitKey(1) & 0xFF == ord('q'): 
+#         break
 
-# Display the image
-cap.release()
+# # Display the image
+# cap.release()
+
+image = cv2.imread('image2.jpeg')
 
 i_bin = image
 i_blur = image
@@ -58,6 +60,8 @@ def find_rect(i_inp):
     cv2.imshow('img', i_inp)
     cv2.waitKey(0)
     
+    global i_bin, i_blur
+    
     i_gray = cv2.cvtColor(i_inp, cv2.COLOR_BGR2GRAY)
     i_blur = cv2.GaussianBlur(i_gray, (11, 11), 0)
     i_blur = cv2.medianBlur(i_gray, 25)
@@ -66,11 +70,12 @@ def find_rect(i_inp):
     cv2.imshow('img', i_blur)
     cv2.waitKey(0)
     
-    i_bin = cv2.threshold(i_blur, 160, 255, cv2.THRESH_BINARY)[1]
+    i_bin = cv2.threshold(i_blur, thresh, 255, cv2.THRESH_BINARY)[1]
 
     cv2.imshow('img', i_bin)
     cv2.waitKey(0)
 
+    i_bin = cv2.threshold(i_blur, thresh, 255, cv2.THRESH_BINARY)[1]
     contours, hierarchy = cv2.findContours(i_bin, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     cnt_largest_i = maxl(list(cv2.contourArea(c) for c in contours))
     cnt_largest = contours[cnt_largest_i]
@@ -80,7 +85,7 @@ def find_rect(i_inp):
     epsilon = 0.02 * cv2.arcLength(cnt_largest, True)
     approx = cv2.approxPolyDP(cnt_largest, epsilon, True)
 
-    cv2.polylines(i_inp, pts=[approx], isClosed=False, color=(0, 255, 0), thickness=1)
+    cv2.polylines(i_inp, pts=[approx], isClosed=False, color=(0, 255, 0), thickness=6)
 
     print(approx)
 
@@ -89,7 +94,11 @@ def find_rect(i_inp):
 
     return approx
 
+thresh = 160
 def changeThreshold(val):
+    global thresh
+    global i_bin, i_blur
+    thresh = val
     i_bin = cv2.threshold(i_blur, val, 255, cv2.THRESH_BINARY)[1]
 
     cv2.imshow('img', i_bin)
