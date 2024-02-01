@@ -5,13 +5,13 @@ import numpy as np
 cap = cv2.VideoCapture(0)
 
 def undistort(img):
-    ret = 0.9610454141475719
+    ret = 2.2063746245104525
     mtx = np.array([
-        [929.02095583, 0.00000000e+00, 978.01846836],
-        [0.00000000e+00, 927.4997145, 6.68826192e+02],
+        [1.09530534e+03, 0.00000000e+00, 9.54353075e+02],
+        [0.00000000e+00, 1.09011353e+03, 5.41983054e+02],
         [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
     ])
-    dist = np.array([[-0.3821828, 0.17840163, 0.00063669, 0.00090362, -0.04303795]])
+    dist = np.array([[-0.32290118, 0.09774828, 0.01101426, 0.00701455, -0.01189179]])
 
     h,  w = img.shape[:2]
     newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
@@ -42,23 +42,7 @@ while cap.isOpened():
     if cv2.waitKey(1) & 0xFF == ord('q'): 
         break
 
-# Display the image
-cv2.imshow('Image', image)
-cv2.imwrite("image.jpeg", image)
+cv2.imwrite("image3.jpeg", image)
 
-# Define a mouse callback function
-def mouse_callback(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        cv2.circle(image,(x,y),25,(255,0,0),-1)
-        print('Left mouse button clicked at coordinates:', x, y)
-        cv2.imshow('Image', image)
-        
-
-# Set the mouse callback function
-cv2.setMouseCallback('Image', mouse_callback)
-
-# Wait for a key press
-cv2.waitKey(0)
-
-# Close the window
+cap.release()
 cv2.destroyAllWindows()
