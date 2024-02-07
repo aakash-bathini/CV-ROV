@@ -27,23 +27,7 @@ def undistort(img):
     
     return dst
 
-while cap.isOpened():
-    ret, frame = cap.read()
-    
-    if ret:
-        frame = undistort(frame)
-        if cv2.waitKey(1) & 0xFF == ord('s'): 
-            image = frame
-            break
-            
-        cv2.imshow("Capture", frame)
-        
-    if cv2.waitKey(1) & 0xFF == ord('q'): 
-        break
-
-# Display the image
-cap.release()
-
+image = cv2.imread('image3.jpeg')
 
 i_bin = image
 i_blur = image
